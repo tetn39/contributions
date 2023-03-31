@@ -23,10 +23,12 @@ async def check(ctx, name):
     # nameを取得してloopを起動する
     checker.start(ctx, name)
     await ctx.send(f'{name}のcontributionsをチェックします')
+
 @bot.command()
 async def stop(ctx):
     """ループを止める"""
     checker.stop()
+    await ctx.send('ループを止めました')
 
 @tasks.loop(seconds=10)
 async def checker(ctx, name):

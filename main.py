@@ -4,7 +4,7 @@ import os
 import requests
 from dotenv import load_dotenv
 
-intents = discord.Intents.default()
+intents = discord.Intents.all()
 intents.members = True
 
 load_dotenv()

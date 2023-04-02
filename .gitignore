@@ -1,2 +1,4 @@
 # envファイル除外
 .env
+# DBファイル除外
+MAIN.db

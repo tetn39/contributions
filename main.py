@@ -53,21 +53,28 @@ async def logout(ctx, name='default'):
     await ctx.send('削除しました\n`?showdb`で確認してください')
 
 @bot.command()
-async def check(ctx):
+async def check(ctx, target_name='default'):
     """contributionsをチェックする"""
-    mention = ctx.author.mention
-    cur.execute('SELECT name, mention FROM users WHERE mention = ?', (mention,))
-    message = []
-    for row in cur:
-        name = row[0]
-        mention = row[1]
-        url = f'https://github-contributions-api.deno.dev/{name}.json'
+    if target_name == 'default':
+        mention = ctx.author.mention
+        cur.execute('SELECT name, mention FROM users WHERE mention = ?', (mention,))
+        message = []
+        for row in cur:
+            name = row[0]
+            mention = row[1]
+            url = f'https://github-contributions-api.deno.dev/{name}.json'
+            url_json = requests.get(url).json()
+            message.append(f'{mention}\n今日の`{name}`のcontributionsは{url_json["contributions"][-1][-1]["contributionCount"]}回です')
+        if len(message) == 0:
+            await ctx.send('まだ名前が登録されていません')
+            return
+        await ctx.send('\n'.join(message))
+    else:
+        mention = ctx.author.mention
+        url = f'https://github-contributions-api.deno.dev/{target_name}.json'
         url_json = requests.get(url).json()
-        message.append(f'{mention}\n今日の`{name}`のcontributionsは{url_json["contributions"][-1][-1]["contributionCount"]}回です')
-    if len(message) == 0:
-        await ctx.send('まだ名前が登録されていません')
-        return
-    await ctx.send('\n'.join(message))
+        await ctx.send(f'{mention}\n今日の`{target_name}`のcontributionsは{url_json["contributions"][-1][-1]["contributionCount"]}回です')
+
 
 @bot.command()
 async def start(ctx):

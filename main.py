@@ -63,7 +63,7 @@ async def check(ctx):
         mention = row[1]
         url = f'https://github-contributions-api.deno.dev/{name}.json'
         url_json = requests.get(url).json()
-        message.append(f'{mention}\n今日のcontributionsは{url_json["contributions"][-1][-1]["contributionCount"]}回です')
+        message.append(f'{mention}\n今日の{name}のcontributionsは{url_json["contributions"][-1][-1]["contributionCount"]}回です')
     if len(message) == 0:
         await ctx.send('まだ名前が登録されていません')
         return
